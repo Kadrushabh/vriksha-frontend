@@ -578,29 +578,43 @@ window.BACKEND_URL = window.BACKEND_URL || 'https://api.vriksha.store';
       if (user.lastName)  document.getElementById('lastName').value  = user.lastName;
       if (user.email)     document.getElementById('email').value     = user.email;
       if (user.phone)     document.getElementById('phone').value     = user.phone;
-      if (user.defaultAddress) {
-        const a = user.defaultAddress;
-        if (a.address)  document.getElementById('address').value  = a.address;
-        if (a.address2) document.getElementById('address2').value = a.address2;
-        if (a.city)     document.getElementById('city').value     = a.city;
-        if (a.pincode)  document.getElementById('pincode').value  = a.pincode;
-        if (a.state) {
+
+      // Find default address from addresses array (falls back to first address)
+      const addr = user.defaultAddress ||
+        (user.addresses && (user.addresses.find(a => a.isDefault) || user.addresses[0]));
+      if (addr) {
+        if (addr.address)  document.getElementById('address').value  = addr.address;
+        if (addr.address2) document.getElementById('address2').value = addr.address2;
+        if (addr.city)     document.getElementById('city').value     = addr.city;
+        if (addr.pincode)  document.getElementById('pincode').value  = addr.pincode;
+        if (addr.state) {
           const sel = document.getElementById('state');
           for (let i = 0; i < sel.options.length; i++) {
-            if (sel.options[i].text === a.state || sel.options[i].value === a.state) {
+            if (sel.options[i].text === addr.state || sel.options[i].value === addr.state) {
               sel.selectedIndex = i; break;
             }
           }
         }
       }
+
+      // Hide the "login for faster checkout" prompt — user is already logged in
+      const prompt = document.getElementById('checkoutLoginPrompt');
+      if (prompt) prompt.style.display = 'none';
     },
 
     prefillFromAuth() {
-      setTimeout(() => {
-        if (window.auth && window.auth.isLoggedIn && window.auth.user) {
-          this.prefillFromUser(window.auth.user);
+      // auth.js runs its DOMContentLoaded handler before checkout's (registered first),
+      // so window.auth is already set with cached data — try immediately.
+      if (window.auth && window.auth.isLoggedIn && window.auth.user) {
+        this.prefillFromUser(window.auth.user);
+        return;
+      }
+      // Not yet resolved — listen for the authChange event auth.js fires after session verify
+      window.addEventListener('authChange', (e) => {
+        if (e.detail && e.detail.isLoggedIn && e.detail.user) {
+          this.prefillFromUser(e.detail.user);
         }
-      }, 800);
+      }, { once: true });
     },
 
     render() {
