@@ -2,7 +2,7 @@
 // VRIKSHA - User Auth (Phone OTP Login)
 // ========================================
 
-var BACKEND_URL = 'https://vriksha-production.up.railway.app';
+var BACKEND_URL = window.BACKEND_URL || 'https://vriksha-production.up.railway.app';
 
 class VrikshaAuth {
   constructor() {
