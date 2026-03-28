@@ -8,6 +8,20 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link href="styles.css" rel="stylesheet"/>
+  <!-- Pre-paint auth check: runs before body renders so banners are correct on first frame -->
+  <script>
+  try {
+    var _vu = JSON.parse(localStorage.getItem('vriksha_user') || 'null');
+    document.documentElement.classList.add((_vu && (_vu._id || _vu.phone)) ? 'vk-logged-in' : 'vk-guest');
+  } catch(e) { document.documentElement.classList.add('vk-guest'); }
+  </script>
+  <style>
+  /* Banner visibility driven by auth class set above — zero JS-timing dependency */
+  html.vk-logged-in #checkoutLoginPrompt { display: none !important; }
+  html.vk-logged-in #checkoutWelcomeBanner { display: flex !important; }
+  html.vk-guest    #checkoutLoginPrompt { display: flex !important; }
+  html.vk-guest    #checkoutWelcomeBanner { display: none !important; }
+  </style>
   <style>
   .header-checkout{background:var(--color-surface);box-shadow:var(--shadow-sm);position:fixed;top:0;left:0;right:0;z-index:1000}
   .header-checkout .announcement-bar{display:none}
@@ -606,14 +620,15 @@ window.BACKEND_URL = window.BACKEND_URL || 'https://api.vriksha.store';
         }
       }
 
-      // Show welcome banner, hide guest login prompt
-      const welcome = document.getElementById('checkoutWelcomeBanner');
-      const prompt  = document.getElementById('checkoutLoginPrompt');
-      if (prompt)  prompt.style.display  = 'none';
-      if (welcome) {
-        const name = (user.firstName || '').trim();
-        if (name) document.getElementById('checkoutWelcomeName').textContent = 'Welcome back, ' + name + '!';
-        welcome.style.display = 'flex';
+      // Mark html element as logged-in (overrides any stale CSS class)
+      document.documentElement.classList.remove('vk-guest');
+      document.documentElement.classList.add('vk-logged-in');
+
+      // Set personalised welcome name
+      const name = (user.firstName || '').trim();
+      if (name) {
+        const nameEl = document.getElementById('checkoutWelcomeName');
+        if (nameEl) nameEl.textContent = 'Welcome back, ' + name + '!';
       }
     },
 
@@ -624,9 +639,8 @@ window.BACKEND_URL = window.BACKEND_URL || 'https://api.vriksha.store';
         this.prefillFromUser(window.auth.user);
         return;
       }
-      // Not yet resolved — show guest login prompt, then update when auth fires
-      const prompt = document.getElementById('checkoutLoginPrompt');
-      if (prompt) prompt.style.display = 'flex';
+      // CSS class already set correctly by the pre-paint <head> script.
+      // Listen for authChange in case session is verified after page load.
       window.addEventListener('authChange', (e) => {
         if (e.detail && e.detail.isLoggedIn && e.detail.user) {
           this.prefillFromUser(e.detail.user);
