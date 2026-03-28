@@ -201,9 +201,7 @@ function initAddToCart(product) {
 
     addToCartBtn.addEventListener('click', () => {
         const qty = parseInt(qtyInput.value) || 1;
-        for (let i = 0; i < qty; i++) {
-            window.cart.addItem(product, 1);
-        }
+        window.cart.addItem(product, qty);
         
         // Update button state
         const originalText = addToCartBtn.innerHTML;
@@ -219,9 +217,7 @@ function initAddToCart(product) {
         const qty = parseInt(qtyInput.value) || 1;
         // Clear cart and add this product
         window.cart.clearCart();
-        for (let i = 0; i < qty; i++) {
-            window.cart.addItem(product, 1);
-        }
+        window.cart.addItem(product, qty);
         // Go to checkout
         window.location.href = 'checkout.html';
     });

@@ -193,8 +193,8 @@
             document.getElementById('deliveryDate').textContent =
                 `${deliveryStart.toLocaleDateString('en-IN', fmt)} – ${deliveryEnd.toLocaleDateString('en-IN', fmt)}`;
 
-            // Clear cart
-            localStorage.removeItem('vriksha_cart');
+            // Clear cart only when arriving from a real order
+            if (orderId) localStorage.removeItem('vriksha_cart');
 
             // Confetti
             createConfetti();

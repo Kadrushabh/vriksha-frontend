@@ -8,7 +8,7 @@ const PRODUCTS = [
         name: 'Organic Wheatgrass Tablets',
         shortName: 'Wheatgrass Tablets',
         category: 'daily-wellness',
-        price: 1,
+        price: 549,
         originalPrice: 699,
         weight: '200g | 60 Tablets',
         description: 'Natural detox & immunity booster with chlorophyll-rich superfood. Made from 100% organic young wheat plant leaves.',
