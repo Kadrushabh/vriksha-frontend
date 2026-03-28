@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>My Account | VRIKSHA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+    .acc-page{padding-top:70px;background:var(--color-bg);}
+    @media(min-width:1024px){.acc-page{padding-top:80px}}
+
+    /* ── Auth Wall ── */
+    .auth-wall{max-width:440px;margin:2rem auto;padding:0 1rem 5rem}
+    .auth-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 4px 24px rgba(45,74,45,.08)}
+    .auth-tabs{display:flex;border-bottom:1px solid var(--color-border)}
+    .auth-tab{flex:1;padding:.875rem;font-size:.875rem;font-weight:500;text-align:center;cursor:pointer;color:var(--color-text-muted);transition:all .2s;border:none;background:none}
+    .auth-tab.active{color:var(--color-primary);background:var(--color-bg-warm);border-bottom:2px solid var(--color-primary);margin-bottom:-1px}
+    .auth-body{padding:1.75rem}
+    .auth-panel{display:none}.auth-panel.active{display:block}
+    .auth-title{font-family:var(--font-display);font-size:1.5rem;margin-bottom:.25rem}
+    .auth-sub{font-size:.8125rem;color:var(--color-text-muted);margin-bottom:1.5rem}
+    .af-group{margin-bottom:1rem}
+    .af-group label{display:block;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:.375rem}
+    .af-input{width:100%;padding:.8125rem 1rem;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);font-size:.9375rem;font-family:var(--font-body);background:var(--color-bg);transition:border-color .2s;box-sizing:border-box;min-height:48px}
+    .af-input:focus{outline:none;border-color:var(--color-primary);background:#fff}
+    .af-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .af-error{font-size:.75rem;color:#e53935;margin-top:.5rem;display:none}
+    .af-error.show{display:block}
+    .af-divider{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0;color:var(--color-text-muted);font-size:.75rem}
+    .af-divider::before,.af-divider::after{content:'';flex:1;height:1px;background:var(--color-border)}
+    .af-otp-row{display:flex;gap:.5rem}
+    .af-otp-row .af-input{flex:1}
+    .af-otp-btn{padding:.8125rem 1rem;background:var(--color-bg-warm);border:1.5px solid var(--color-border);border-radius:var(--radius-sm);font-size:.8125rem;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--color-primary);transition:all .2s;min-height:48px}
+    .af-otp-btn:hover{background:var(--color-accent-green)}
+    .af-otp-btn:disabled{opacity:.5;cursor:not-allowed}
+    .af-submit{width:100%;margin-top:.25rem}
+    .pass-wrap{position:relative}
+    .pass-toggle{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--color-text-muted);padding:0;display:flex}
+    .auth-benefits{background:var(--color-bg-warm);padding:1.25rem 1.75rem;border-top:1px solid var(--color-border-light)}
+    .auth-benefit-item{display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--color-text-secondary);margin-bottom:.5rem}
+    .auth-benefit-item svg{color:var(--color-primary);flex-shrink:0}
+
+    /* ── Dashboard ── */
+    .dash-wrap{max-width:1100px;margin:0 auto;padding:1.5rem 1rem 6rem}
+    @media(min-width:768px){.dash-wrap{padding:2rem 1.5rem 4rem}}
+    .dash-banner{background:linear-gradient(135deg,var(--color-primary) 0%,var(--color-primary-light) 100%);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;color:#fff;display:flex;align-items:center;gap:1rem}
+    .dash-avatar{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.5rem;color:#fff;flex-shrink:0}
+    .dash-greeting{font-size:.8125rem;opacity:.8;margin-bottom:.125rem}
+    .dash-name{font-family:var(--font-display);font-size:1.25rem;font-weight:500}
+    .dash-meta{font-size:.75rem;opacity:.7;margin-top:.125rem}
+    .dash-layout{display:grid;grid-template-columns:1fr;gap:1.25rem}
+    @media(min-width:768px){.dash-layout{grid-template-columns:220px 1fr;gap:1.5rem;align-items:start}}
+    .dash-sidebar{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
+    .dash-sidebar-section{padding:.5rem 0;border-bottom:1px solid var(--color-border-light)}
+    .dash-sidebar-section:last-child{border-bottom:none}
+    .dash-sidebar-label{font-size:.625rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-muted);padding:.625rem 1rem .25rem}
+    .dash-nav-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;font-size:.875rem;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left}
+    .dash-nav-item:hover{background:var(--color-bg);color:var(--color-text)}
+    .dash-nav-item.active{background:var(--color-bg-warm);color:var(--color-primary);font-weight:500;border-right:3px solid var(--color-primary)}
+    .dash-nav-item svg{flex-shrink:0;opacity:.7}
+    .dash-nav-item.active svg{opacity:1}
+    .dash-mob-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:1.25rem}
+    .dash-mob-tabs::-webkit-scrollbar{display:none}
+    .dash-mob-tab{flex-shrink:0;padding:.75rem .875rem;font-size:.8rem;font-weight:500;color:var(--color-text-muted);border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.25rem;min-width:72px;transition:color .15s;border-bottom:2px solid transparent}
+    .dash-mob-tab.active{color:var(--color-primary);border-bottom-color:var(--color-primary)}
+    @media(min-width:768px){.dash-mob-tabs{display:none}}
+    @media(max-width:767px){.dash-sidebar{display:none}}
+    .dash-panel{display:none}.dash-panel.active{display:block}
+    .dash-section-title{font-family:var(--font-display);font-size:1.25rem;margin-bottom:1rem}
+    .dash-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1.25rem;margin-bottom:1rem}
+
+    /* orders */
+    .order-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:1rem}
+    .order-card-head{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;background:var(--color-bg);border-bottom:1px solid var(--color-border-light);font-size:.8rem}
+    .order-id-label{color:var(--color-text-muted);font-size:.6875rem;text-transform:uppercase;letter-spacing:.04em}
+    .order-id-val{font-weight:600;color:var(--color-text);font-size:.875rem;margin-top:.125rem}
+    .order-status-badge{padding:.25rem .75rem;border-radius:var(--radius-full);font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .order-status-badge.confirmed,.order-status-badge.processing{background:#fff3cd;color:#856404}
+    .order-status-badge.shipped{background:#cfe2ff;color:#084298}
+    .order-status-badge.delivered{background:#d1e7dd;color:#0a3622}
+    .order-status-badge.cancelled{background:#f8d7da;color:#842029}
+    .order-card-body{padding:1rem 1.25rem}
+    .order-items-list{display:flex;flex-direction:column;gap:.625rem}
+    .order-item-row{display:flex;align-items:center;gap:.75rem}
+    .order-item-placeholder{width:44px;height:44px;border-radius:6px;background:linear-gradient(135deg,#a5d6a7,#66bb6a);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.5625rem;color:#fff;font-weight:600;text-align:center;padding:2px}
+    .order-item-name{font-size:.8125rem;font-weight:500}
+    .order-item-qty{font-size:.75rem;color:var(--color-text-muted)}
+    .order-card-foot{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;border-top:1px solid var(--color-border-light);flex-wrap:wrap;gap:.5rem}
+    .order-total-label{font-size:.75rem;color:var(--color-text-muted)}
+    .order-total-val{font-size:1rem;font-weight:600;color:var(--color-text)}
+    .order-track-btn{font-size:.75rem;color:var(--color-primary);font-weight:500;text-decoration:none;padding:.375rem .875rem;border:1px solid var(--color-primary);border-radius:var(--radius-full);transition:all .15s}
+    .order-track-btn:hover{background:var(--color-primary);color:#fff}
+
+    /* profile */
+    .profile-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+    @media(min-width:640px){.profile-grid{grid-template-columns:1fr 1fr}}
+    .pf-group{display:flex;flex-direction:column;gap:.375rem}
+    .pf-group label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted)}
+    .pf-group input{padding:.8125rem 1rem;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);font-size:.9375rem;font-family:var(--font-body);background:var(--color-bg);min-height:48px;box-sizing:border-box;width:100%;transition:border-color .2s}
+    .pf-group input:focus{outline:none;border-color:var(--color-primary);background:#fff}
+    .pf-group input:disabled{background:var(--color-bg-warm);color:var(--color-text-muted);cursor:not-allowed}
+    .pf-full{grid-column:1/-1}
+
+    /* addresses */
+    .addr-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+    @media(min-width:640px){.addr-grid{grid-template-columns:1fr 1fr}}
+    .addr-card{border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:1rem 1.125rem;position:relative}
+    .addr-card.default{border-color:var(--color-primary)}
+    .addr-default-badge{position:absolute;top:.75rem;right:.75rem;background:var(--color-primary);color:#fff;font-size:.5625rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .5rem;border-radius:var(--radius-full)}
+    .addr-name{font-weight:600;font-size:.875rem;margin-bottom:.25rem}
+    .addr-text{font-size:.8125rem;color:var(--color-text-secondary);line-height:1.6}
+
+    /* security */
+    .sec-item{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid var(--color-border-light)}
+    .sec-item:last-child{border-bottom:none}
+    .sec-item-left{display:flex;align-items:center;gap:.875rem}
+    .sec-icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--color-bg-warm);display:flex;align-items:center;justify-content:center;color:var(--color-primary);flex-shrink:0}
+    .sec-label{font-size:.875rem;font-weight:500}
+    .sec-sub{font-size:.75rem;color:var(--color-text-muted);margin-top:.125rem}
+    .sec-badge{padding:.25rem .625rem;border-radius:var(--radius-full);font-size:.6875rem;font-weight:600}
+    .sec-badge.verified{background:#d1e7dd;color:#0a3622}
+    .sec-badge.unverified{background:#f8d7da;color:#842029}
+
+    /* help */
+    .help-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem}
+    @media(min-width:480px){.help-grid{grid-template-columns:repeat(3,1fr)}}
+    .help-tile{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1.125rem 1rem;text-align:center;cursor:pointer;transition:all .15s;text-decoration:none;color:inherit;display:block}
+    .help-tile:hover{border-color:var(--color-primary);background:var(--color-bg-warm)}
+    .help-tile-icon{font-size:1.5rem;margin-bottom:.5rem}
+    .help-tile-label{font-size:.8125rem;font-weight:500}
+
+    /* logout btn */
+    .logout-btn{display:flex;align-items:center;gap:.75rem;width:100%;padding:.875rem 1rem;background:none;border:1.5px solid #e53935;color:#e53935;border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s}
+    .logout-btn:hover{background:#e53935;color:#fff}
+
+    /* skeleton */
+    .skel{background:linear-gradient(90deg,var(--color-border) 25%,var(--color-bg-warm) 50%,var(--color-border) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .skel-card{height:120px;border-radius:var(--radius-md);margin-bottom:1rem}
+
+    /* ══════════════════════════════════
+       BOTTOM NAV FIX — account page
+       Root cause: styles.css sets body
+       padding-bottom for the nav gap,
+       but .acc-page min-height:100vh
+       fills that space and sits on top.
+       Fix: remove stacking contexts,
+       force nav above everything.
+       ══════════════════════════════════ */
+
+    /* 1. acc-page must be static, no stacking context */
+    .acc-page {
+        position: static !important;
+        z-index: auto !important;
+        isolation: auto !important;
+        transform: none !important;
+        /* Let body padding handle the bottom nav gap */
+        min-height: calc(100vh - 56px) !important;
+        padding-bottom: 16px !important;
+    }
+
+    /* 2. inner wrappers also static */
+    #authWall,
+    #dashboard {
+        position: static !important;
+        z-index: auto !important;
+        isolation: auto !important;
+        transform: none !important;
+    }
+
+    /* 3. Nuclear override: bottom nav always on top */
+    .mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 99999 !important;
+        pointer-events: auto !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .mobile-bottom-nav .bottom-nav-item {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        display: flex !important;
+    }
+    @media(min-width:1024px) {
+        .mobile-bottom-nav { display: none !important; }
+    }
+
+    /* change password modal */
+    .cpw-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;pointer-events:none;transition:all .2s}
+    .cpw-overlay.active{opacity:1;visibility:visible;pointer-events:auto}
+    .cpw-modal{background:var(--color-surface);border-radius:var(--radius-lg);padding:2rem;max-width:420px;width:100%}
+    .cpw-title{font-family:var(--font-display);font-size:1.375rem;margin-bottom:1.25rem}
+    </style>
+</head>
+<body>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="cart-close" id="cartClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-empty" id="cartEmpty"><span class="cart-empty-icon">🛒</span><p>Your cart is empty</p></div>
+        <div class="cart-footer" id="cartFooter">
+            <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+            <p class="cart-note">Shipping calculated at checkout</p>
+            <button class="btn btn-primary btn-full" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </aside>
+
+    <!-- Navigation -->
+    <header class="header" id="header">
+        <div class="announcement-bar">
+            <p>Free shipping on orders above ₹999 • Use code <strong>NATURE15</strong> for 15% off</p>
+        </div>
+        <nav class="nav">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-left">
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="shop.html#collections" class="nav-link">Collections</a>
+                <a href="our-story.html" class="nav-link">Our Story</a>
+            </div>
+            <a href="index.html" class="logo">
+                <span class="logo-icon">❧</span>
+                <span class="logo-text">VRIKSHA</span>
+            </a>
+            <div class="nav-right">
+                <a href="our-story.html#rituals" class="nav-link">Rituals</a>
+                <a href="our-story.html#journal" class="nav-link">Journal</a>
+                <div class="nav-icons">
+                    <button class="icon-btn" id="userBtnDesktop" onclick="window.location.href='account.html'" aria-label="Account">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                            <path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-content">
+            <a href="index.html" class="mobile-nav-link">Home</a>
+            <a href="shop.html" class="mobile-nav-link">Shop</a>
+            <a href="our-story.html" class="mobile-nav-link">Our Story</a>
+            <a href="contact.html" class="mobile-nav-link">Contact</a>
+        </div>
+        <div class="mobile-nav-footer"><p>❧ VRIKSHA · Rooted in Ancient Wisdom</p></div>
+    </div>
+
+    <div class="acc-page">
+
+        <!-- AUTH WALL — FIXED: removed position:relative and z-index that caused stacking context overlap -->
+        <div id="authWall" style="display:none;">
+            <div class="auth-wall">
+
+                <div class="auth-card">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" id="tabLogin" onclick="switchAuth('login')">Sign In</button>
+                        <button class="auth-tab" id="tabRegister" onclick="switchAuth('register')">Create Account</button>
+                    </div>
+                    <div class="auth-body">
+
+                        <!-- LOGIN -->
+                        <div class="auth-panel active" id="panelLogin">
+                            <h2 class="auth-title">Welcome back</h2>
+                            <p class="auth-sub">Sign in with mobile OTP or email</p>
+
+                            <div class="af-group">
+                                <label>Mobile Number</label>
+                                <div class="af-otp-row">
+                                    <input type="tel" class="af-input" id="loginPhone" placeholder="10-digit number" maxlength="10" inputmode="numeric">
+                                    <button class="af-otp-btn" id="loginSendOtp" onclick="handleLoginOTP()">Get OTP</button>
+                                </div>
+                            </div>
+                            <div id="loginOtpSection" style="display:none;">
+                                <div class="af-group">
+                                    <label>Enter 6-digit OTP</label>
+                                    <div class="otp-inputs" id="loginOtpInputs">
+                                        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric">
+                                        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric">
+                                        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric">
+                                        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric">
+                                        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric">
+                                        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric">
+                                    </div>
+                                    <div class="otp-timer" id="loginOtpTimer" style="margin-top:.5rem;">Resend in <strong id="loginCountdown">30s</strong></div>
+                                </div>
+                                <button class="btn btn-primary af-submit" onclick="handleVerifyLoginOTP()">Verify & Sign In</button>
+                                <button style="display:block;margin:.5rem auto 0;background:none;border:none;color:var(--color-text-muted);font-size:.8125rem;cursor:pointer;" onclick="resetLoginOTP()">← Change Number</button>
+                            </div>
+                            <div id="loginErrorPhone" class="af-error"></div>
+
+                            <div class="af-divider">or sign in with email</div>
+
+                            <div class="af-group">
+                                <label>Email Address</label>
+                                <input type="email" class="af-input" id="loginEmail" placeholder="you@example.com">
+                            </div>
+                            <div class="af-group">
+                                <label>Password</label>
+                                <div class="pass-wrap">
+                                    <input type="password" class="af-input" id="loginPassword" placeholder="Your password">
+                                    <button type="button" class="pass-toggle" onclick="togglePass('loginPassword')">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="loginErrorEmail" class="af-error"></div>
+                            <button class="btn btn-primary af-submit" onclick="handleEmailLogin()">Sign In with Email</button>
+                        </div>
+
+                        <!-- REGISTER -->
+                        <div class="auth-panel" id="panelRegister">
+                            <h2 class="auth-title">Create account</h2>
+                            <p class="auth-sub">Join VRIKSHA for exclusive offers &amp; faster checkout</p>
+                            <div class="af-row">
+                                <div class="af-group">
+                                    <label>First Name *</label>
+                                    <input type="text" class="af-input" id="regFirst" placeholder="Priya">
+                                </div>
+                                <div class="af-group">
+                                    <label>Last Name</label>
+                                    <input type="text" class="af-input" id="regLast" placeholder="Sharma">
+                                </div>
+                            </div>
+                            <div class="af-group">
+                                <label>Email Address *</label>
+                                <input type="email" class="af-input" id="regEmail" placeholder="you@example.com">
+                            </div>
+                            <div class="af-group">
+                                <label>Mobile Number</label>
+                                <input type="tel" class="af-input" id="regPhone" placeholder="10-digit number" maxlength="10" inputmode="numeric">
+                            </div>
+                            <div class="af-group">
+                                <label>Password *</label>
+                                <div class="pass-wrap">
+                                    <input type="password" class="af-input" id="regPassword" placeholder="Min 8 characters">
+                                    <button type="button" class="pass-toggle" onclick="togglePass('regPassword')">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="af-group">
+                                <label>Confirm Password *</label>
+                                <div class="pass-wrap">
+                                    <input type="password" class="af-input" id="regConfirm" placeholder="Re-enter password">
+                                    <button type="button" class="pass-toggle" onclick="togglePass('regConfirm')">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="regError" class="af-error"></div>
+                            <button class="btn btn-primary af-submit" onclick="handleRegister()">Create My Account</button>
+                            <p style="font-size:.8125rem;color:var(--color-text-muted);text-align:center;margin-top:1rem;">
+                                Already have an account? <a onclick="switchAuth('login')" style="color:var(--color-primary);font-weight:500;cursor:pointer;text-decoration:underline;">Sign In</a>
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="auth-benefits">
+                        <div style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);margin-bottom:.75rem;">Why create an account?</div>
+                        <div class="auth-benefit-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Track all your orders in one place</div>
+                        <div class="auth-benefit-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Faster checkout with saved addresses</div>
+                        <div class="auth-benefit-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Exclusive member offers &amp; early access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD — FIXED: removed position:relative and z-index -->
+        <div id="dashboard" style="display:none;">
+            <div class="dash-wrap">
+
+                <div class="dash-banner">
+                    <div class="dash-avatar" id="dashAvatar">V</div>
+                    <div>
+                        <div class="dash-greeting">Hello 👋</div>
+                        <div class="dash-name" id="dashName">Loading...</div>
+                        <div class="dash-meta" id="dashMeta"></div>
+                    </div>
+                </div>
+
+                <!-- Mobile tabs -->
+                <div class="dash-mob-tabs">
+                    <button class="dash-mob-tab active" onclick="switchPanel('orders',this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                        Orders
+                    </button>
+                    <button class="dash-mob-tab" onclick="switchPanel('profile',this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Profile
+                    </button>
+                    <button class="dash-mob-tab" onclick="switchPanel('addresses',this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Address
+                    </button>
+                    <button class="dash-mob-tab" onclick="switchPanel('security',this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Security
+                    </button>
+                    <button class="dash-mob-tab" onclick="switchPanel('help',this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Help
+                    </button>
+                </div>
+
+                <div class="dash-layout">
+                    <!-- Sidebar -->
+                    <aside class="dash-sidebar">
+                        <div class="dash-sidebar-section">
+                            <div class="dash-sidebar-label">My Orders</div>
+                            <button class="dash-nav-item active" id="snav-orders" onclick="switchPanel('orders',this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                                My Orders
+                            </button>
+                        </div>
+                        <div class="dash-sidebar-section">
+                            <div class="dash-sidebar-label">Account Settings</div>
+                            <button class="dash-nav-item" id="snav-profile" onclick="switchPanel('profile',this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                Profile Information
+                            </button>
+                            <button class="dash-nav-item" id="snav-addresses" onclick="switchPanel('addresses',this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Manage Addresses
+                            </button>
+                            <button class="dash-nav-item" id="snav-security" onclick="switchPanel('security',this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                Login &amp; Security
+                            </button>
+                        </div>
+                        <div class="dash-sidebar-section">
+                            <div class="dash-sidebar-label">Support</div>
+                            <button class="dash-nav-item" id="snav-help" onclick="switchPanel('help',this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                Help &amp; Support
+                            </button>
+                        </div>
+                        <div class="dash-sidebar-section" style="padding:1rem;">
+                            <button class="logout-btn" onclick="handleLogout()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                Sign Out
+                            </button>
+                        </div>
+                    </aside>
+
+                    <!-- Panels -->
+                    <div>
+                        <!-- ORDERS -->
+                        <div class="dash-panel active" id="panel-orders">
+                            <h2 class="dash-section-title">My Orders</h2>
+                            <div id="ordersLoading"><div class="skel skel-card"></div><div class="skel skel-card"></div></div>
+                            <div id="ordersList" style="display:none;"></div>
+                            <div id="noOrders" style="display:none;">
+                                <div class="dash-card" style="text-align:center;padding:3rem 1rem;">
+                                    <div style="font-size:2.5rem;margin-bottom:.75rem;opacity:.3;">📦</div>
+                                    <p style="color:var(--color-text-muted);font-size:.9rem;margin-bottom:1.25rem;">You haven't placed any orders yet.</p>
+                                    <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PROFILE -->
+                        <div class="dash-panel" id="panel-profile">
+                            <h2 class="dash-section-title">Profile Information</h2>
+                            <div class="dash-card">
+                                <div class="profile-grid">
+                                    <div class="pf-group"><label>First Name</label><input type="text" id="pfFirst" placeholder="Your first name"></div>
+                                    <div class="pf-group"><label>Last Name</label><input type="text" id="pfLast" placeholder="Your last name"></div>
+                                    <div class="pf-group"><label>Email Address</label><input type="email" id="pfEmail" placeholder="your@email.com"></div>
+                                    <div class="pf-group"><label>Mobile Number</label><input type="tel" id="pfPhone" disabled></div>
+                                    <div class="pf-group pf-full" style="margin-top:.5rem;">
+                                        <button class="btn btn-primary" onclick="saveProfile()" style="width:auto;">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ADDRESSES -->
+                        <div class="dash-panel" id="panel-addresses">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem;">
+                                <h2 class="dash-section-title" style="margin-bottom:0;">Saved Addresses</h2>
+                                <button class="btn btn-primary" onclick="openAddressModal()" style="font-size:.8125rem;padding:.6rem 1.25rem;display:flex;align-items:center;gap:.5rem;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    Add New Address
+                                </button>
+                            </div>
+                            <div id="addressesList" class="addr-grid"></div>
+                            <div id="noAddresses" style="display:none;">
+                                <div class="dash-card" style="text-align:center;padding:2.5rem 1rem;">
+                                    <div style="font-size:2rem;margin-bottom:.75rem;opacity:.3;">📍</div>
+                                    <p style="color:var(--color-text-muted);font-size:.875rem;margin-bottom:1.25rem;">No saved addresses yet.</p>
+                                    <button class="btn btn-primary" onclick="openAddressModal()" style="font-size:.875rem;">+ Add Your First Address</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECURITY -->
+                        <div class="dash-panel" id="panel-security">
+                            <h2 class="dash-section-title">Login &amp; Security</h2>
+                            <div class="dash-card"><div id="secItems"></div></div>
+                            <div class="dash-card">
+                                <div style="font-size:.8125rem;font-weight:600;margin-bottom:1rem;color:var(--color-text-secondary);">Account Actions</div>
+                                <button class="logout-btn" onclick="handleLogout()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                    Sign Out of Account
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- HELP -->
+                        <div class="dash-panel" id="panel-help">
+                            <h2 class="dash-section-title">Help &amp; Support</h2>
+                            <div class="help-grid">
+                                <a href="contact.html" class="help-tile"><div class="help-tile-icon">💬</div><div class="help-tile-label">Contact Us</div></a>
+                                <a href="shipping.html" class="help-tile"><div class="help-tile-icon">🚚</div><div class="help-tile-label">Shipping Info</div></a>
+                                <a href="returns.html" class="help-tile"><div class="help-tile-icon">↩️</div><div class="help-tile-label">Returns</div></a>
+                                <a href="contact.html" class="help-tile"><div class="help-tile-icon">📞</div><div class="help-tile-label">Call Support</div></a>
+                                <a href="contact.html" class="help-tile"><div class="help-tile-icon">📧</div><div class="help-tile-label">Email Us</div></a>
+                                <a href="shop.html" class="help-tile"><div class="help-tile-icon">🌿</div><div class="help-tile-label">Shop Now</div></a>
+                            </div>
+                            <div class="dash-card" style="margin-top:1.25rem;text-align:center;">
+                                <p style="font-size:.875rem;color:var(--color-text-muted);">Mon–Sat, 9 AM – 6 PM IST</p>
+                                <p style="font-weight:600;font-size:1rem;margin-top:.25rem;">+91 800 123 4567</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Add Address Modal -->
+    <div class="cpw-overlay" id="addrOverlay" onclick="if(event.target===this)closeAddressModal()">
+        <div class="cpw-modal" style="max-width:520px;max-height:90vh;overflow-y:auto;">
+            <h3 class="cpw-title">Add New Address</h3>
+            <div class="af-row">
+                <div class="af-group"><label>First Name *</label><input type="text" class="af-input" id="addrFirst" placeholder="First name"></div>
+                <div class="af-group"><label>Last Name</label><input type="text" class="af-input" id="addrLast" placeholder="Last name"></div>
+            </div>
+            <div class="af-group"><label>Phone Number *</label><input type="tel" class="af-input" id="addrPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"></div>
+            <div class="af-group"><label>Street Address *</label><input type="text" class="af-input" id="addrStreet" placeholder="House no., Street name, Area"></div>
+            <div class="af-group"><label>Apartment / Building <span style="font-weight:400;color:var(--color-text-muted)">(Optional)</span></label><input type="text" class="af-input" id="addrStreet2" placeholder="Flat no., Building name"></div>
+            <div class="af-row">
+                <div class="af-group"><label>City *</label><input type="text" class="af-input" id="addrCity" placeholder="City"></div>
+                <div class="af-group"><label>PIN Code *</label><input type="text" class="af-input" id="addrPincode" placeholder="6-digit PIN" maxlength="6" inputmode="numeric"></div>
+            </div>
+            <div class="af-group">
+                <label>State *</label>
+                <select class="af-input" id="addrState">
+                    <option value="">Select State</option>
+                    <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option>
+                    <option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option>
+                    <option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+                    <option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
+                    <option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+                    <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option>
+                    <option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+                    <option>Delhi</option><option>Chandigarh</option><option>Jammu &amp; Kashmir</option><option>Ladakh</option>
+                    <option>Puducherry</option><option>Andaman &amp; Nicobar</option><option>Lakshadweep</option>
+                </select>
+            </div>
+            <div style="display:flex;align-items:center;gap:.625rem;margin:.75rem 0;">
+                <input type="checkbox" id="addrDefault" style="width:16px;height:16px;accent-color:var(--color-primary);">
+                <label for="addrDefault" style="font-size:.875rem;color:var(--color-text-secondary);cursor:pointer;">Set as default address</label>
+            </div>
+            <div id="addrError" class="af-error"></div>
+            <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
+                <button class="btn btn-secondary" onclick="closeAddressModal()" style="flex:1;">Cancel</button>
+                <button class="btn btn-primary" onclick="handleSaveAddress()" style="flex:1;" id="addrSaveBtn">Save Address</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="cpw-overlay" id="cpwOverlay" onclick="if(event.target===this)closeCPW()">
+        <div class="cpw-modal">
+            <h3 class="cpw-title">Change Password</h3>
+            <div class="af-group">
+                <label>Current Password</label>
+                <div class="pass-wrap">
+                    <input type="password" class="af-input" id="cpwCurrent" placeholder="Current password">
+                    <button type="button" class="pass-toggle" onclick="togglePass('cpwCurrent')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+            </div>
+            <div class="af-group">
+                <label>New Password</label>
+                <div class="pass-wrap">
+                    <input type="password" class="af-input" id="cpwNew" placeholder="Min 8 characters">
+                    <button type="button" class="pass-toggle" onclick="togglePass('cpwNew')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+            </div>
+            <div class="af-group">
+                <label>Confirm New Password</label>
+                <input type="password" class="af-input" id="cpwConfirm" placeholder="Re-enter new password">
+            </div>
+            <div id="cpwError" class="af-error"></div>
+            <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
+                <button class="btn btn-secondary" onclick="closeCPW()" style="flex:1;">Cancel</button>
+                <button class="btn btn-primary" onclick="handleChangePassword()" style="flex:1;">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span class="toast-icon">✓</span><span class="toast-message" id="toastMessage">Done!</span></div>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav" style="position:fixed!important;bottom:0!important;left:0!important;right:0!important;z-index:9999!important;pointer-events:auto!important;">
+        <a href="index.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="shop.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.95-1.57l1.65-8.42H6"/></svg>
+            <span>Shop</span>
+        </a>
+        <a href="account.html" class="bottom-nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Account</span>
+        </a>
+        <a href="javascript:void(0)" class="bottom-nav-item" onclick="if(window.cart)cart.openCart();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            <span id="bottomCartBadge" class="bottom-nav-badge" style="display:none;">0</span>
+            <span>Cart</span>
+        </a>
+    </nav>
+
+    <script>
+    // Load supporting scripts without letting errors block the page
+    ['products.js','cart.js','auth.js','script.js'].forEach(src=>{
+        const s=document.createElement('script');
+        s.src=src; s.onerror=()=>console.warn('Could not load',src);
+        document.head.appendChild(s);
+    });
+    </script>
+    <script>
+    const BACKEND_URL = 'https://api.vriksha.store';
+
+    function showToast(msg, ok=true) {
+        const t=document.getElementById('toast'),m=document.getElementById('toastMessage');
+        if(!t||!m) return;
+        m.textContent=msg; t.querySelector('.toast-icon').textContent=ok?'✓':'✕';
+        t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);
+    }
+    function showErr(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.classList.add('show');}}
+    function clearErr(id){const e=document.getElementById(id);if(e){e.textContent='';e.classList.remove('show');}}
+    function togglePass(id){const i=document.getElementById(id);if(i)i.type=i.type==='password'?'text':'password';}
+
+    // Auth tab switch
+    function switchAuth(tab) {
+        ['Login','Register'].forEach(t => {
+            const isActive = t.toLowerCase()===tab;
+            document.getElementById('tab'+t)?.classList.toggle('active',isActive);
+            document.getElementById('panel'+t)?.classList.toggle('active',isActive);
+        });
+    }
+
+    // Phone OTP
+    let loginOtpTimer=null, loginOtpPhone='';
+    async function handleLoginOTP() {
+        const phone=document.getElementById('loginPhone').value.replace(/\D/g,'');
+        clearErr('loginErrorPhone');
+        if(!/^\d{10}$/.test(phone)){showErr('loginErrorPhone','Enter a valid 10-digit number');return;}
+        const btn=document.getElementById('loginSendOtp');
+        btn.disabled=true; btn.textContent='Sending...';
+        try {
+            const res=await fetch(`${BACKEND_URL}/api/auth/send-otp`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({phone})});
+            const data=await res.json();
+            if(data.success){
+                loginOtpPhone=phone;
+                document.getElementById('loginOtpSection').style.display='block';
+                btn.textContent='Resend'; btn.disabled=false;
+                startLoginTimer();
+                if(data.otp){setTimeout(()=>{const ins=document.querySelectorAll('#loginOtpInputs .otp-input');String(data.otp).split('').forEach((d,i)=>{if(ins[i])ins[i].value=d;});},500);}
+            } else { showErr('loginErrorPhone',data.error||'Could not send OTP'); btn.disabled=false; btn.textContent='Get OTP'; }
+        } catch(e){ showErr('loginErrorPhone','Connection failed'); btn.disabled=false; btn.textContent='Get OTP'; }
+    }
+    function startLoginTimer(){
+        let s=30; if(loginOtpTimer)clearInterval(loginOtpTimer);
+        const el=document.getElementById('loginCountdown');
+        loginOtpTimer=setInterval(()=>{
+            s--; if(el)el.textContent=s+'s';
+            if(s<=0){clearInterval(loginOtpTimer);if(el)el.parentElement.innerHTML=`<a style="color:var(--color-primary);cursor:pointer;font-weight:600;" onclick="handleLoginOTP()">Resend OTP</a>`;}
+        },1000);
+    }
+    function resetLoginOTP(){
+        document.getElementById('loginOtpSection').style.display='none';
+        const btn=document.getElementById('loginSendOtp'); btn.disabled=false; btn.textContent='Get OTP';
+        if(loginOtpTimer)clearInterval(loginOtpTimer);
+    }
+    async function handleVerifyLoginOTP(){
+        const inputs=document.querySelectorAll('#loginOtpInputs .otp-input');
+        const otp=Array.from(inputs).map(i=>i.value).join('');
+        if(otp.length!==6){showErr('loginErrorPhone','Enter the 6-digit OTP');return;}
+        try {
+            const res=await fetch(`${BACKEND_URL}/api/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({phone:loginOtpPhone,otp})});
+            const data=await res.json();
+            if(data.success&&data.user){
+                if(window.auth){window.auth.user=data.user;window.auth.isLoggedIn=true;window.auth.updateUI();}
+                loadDashboard(data.user);
+            } else { showErr('loginErrorPhone',data.error||'Invalid OTP'); }
+        } catch(e){ showErr('loginErrorPhone','Connection failed'); }
+    }
+
+    // Email login
+    async function handleEmailLogin(){
+        clearErr('loginErrorEmail');
+        const email=document.getElementById('loginEmail').value.trim();
+        const password=document.getElementById('loginPassword').value;
+        if(!email||!password){showErr('loginErrorEmail','Please enter email and password');return;}
+        try {
+            const res=await fetch(`${BACKEND_URL}/api/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({email,password})});
+            const data=await res.json();
+            if(data.success&&data.user){
+                if(window.auth){window.auth.user=data.user;window.auth.isLoggedIn=true;window.auth.updateUI();}
+                loadDashboard(data.user);
+            } else { showErr('loginErrorEmail',data.error||'Invalid email or password'); }
+        } catch(e){ showErr('loginErrorEmail','Connection failed. Please try again.'); }
+    }
+
+    // Register
+    async function handleRegister(){
+        clearErr('regError');
+        const first=document.getElementById('regFirst').value.trim();
+        const last=document.getElementById('regLast').value.trim();
+        const email=document.getElementById('regEmail').value.trim();
+        const phone=document.getElementById('regPhone').value.replace(/\D/g,'');
+        const pass=document.getElementById('regPassword').value;
+        const conf=document.getElementById('regConfirm').value;
+        if(!first||!email||!pass){showErr('regError','Please fill all required fields');return;}
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('regError','Enter a valid email address');return;}
+        if(pass.length<8){showErr('regError','Password must be at least 8 characters');return;}
+        if(pass!==conf){showErr('regError','Passwords do not match');return;}
+        try {
+            const res=await fetch(`${BACKEND_URL}/api/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({firstName:first,lastName:last,email,phone,password:pass})});
+            const data=await res.json();
+            if(data.success&&data.user){
+                if(window.auth){window.auth.user=data.user;window.auth.isLoggedIn=true;window.auth.updateUI();}
+                showToast('Welcome to VRIKSHA! 🌿');
+                loadDashboard(data.user);
+            } else { showErr('regError',data.error||'Registration failed. Try again.'); }
+        } catch(e){ showErr('regError','Connection failed. Please try again.'); }
+    }
+
+    // Dashboard
+    function switchPanel(name,clickedEl){
+        document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+        document.querySelectorAll('.dash-nav-item,.dash-mob-tab').forEach(b=>b.classList.remove('active'));
+        document.getElementById('panel-'+name)?.classList.add('active');
+        if(clickedEl)clickedEl.classList.add('active');
+        const snav=document.getElementById('snav-'+name);
+        if(snav)snav.classList.add('active');
+    }
+
+    function loadDashboard(user){
+        document.getElementById('authWall').style.display='none';
+        document.getElementById('dashboard').style.display='block';
+        const name=user.firstName?`${user.firstName} ${user.lastName||''}`.trim():'+91 '+(user.phone||'');
+        const initials=user.firstName?user.firstName[0].toUpperCase():'V';
+        document.getElementById('dashAvatar').textContent=initials;
+        document.getElementById('dashName').textContent=name;
+        document.getElementById('dashMeta').textContent=user.email||(user.phone?'+91 '+user.phone:'');
+        document.getElementById('pfFirst').value=user.firstName||'';
+        document.getElementById('pfLast').value=user.lastName||'';
+        document.getElementById('pfEmail').value=user.email||'';
+        document.getElementById('pfPhone').value=user.phone?'+91 '+user.phone:'';
+        // Security panel
+        document.getElementById('secItems').innerHTML=`
+            <div class="sec-item">
+                <div class="sec-item-left">
+                    <div class="sec-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.82 9.83a19.79 19.79 0 01-3.07-8.67A2 2 0 012.73 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.1a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 15z"/></svg></div>
+                    <div><div class="sec-label">Mobile Number</div><div class="sec-sub">${user.phone?'+91 '+user.phone:'Not linked'}</div></div>
+                </div>
+                <span class="sec-badge ${user.phone?'verified':'unverified'}">${user.phone?'Verified':'Not set'}</span>
+            </div>
+            <div class="sec-item">
+                <div class="sec-item-left">
+                    <div class="sec-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                    <div><div class="sec-label">Email Address</div><div class="sec-sub">${user.email||'Not added'}</div></div>
+                </div>
+                <span class="sec-badge ${user.email?'verified':'unverified'}">${user.email?'Added':'Not set'}</span>
+            </div>
+            <div class="sec-item">
+                <div class="sec-item-left">
+                    <div class="sec-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+                    <div><div class="sec-label">Password</div><div class="sec-sub">${user.hasPassword?'Password is set':'No password — set one for email login'}</div></div>
+                </div>
+                <button onclick="openCPW()" style="font-size:.8125rem;color:var(--color-primary);font-weight:500;background:none;border:1px solid var(--color-primary);border-radius:var(--radius-full);cursor:pointer;padding:.375rem .875rem;">${user.hasPassword?'Change':'Set Password'}</button>
+            </div>`;
+        loadOrders(); loadAddresses(user);
+    }
+
+    async function loadOrders(){
+        try {
+            const res=await fetch(`${BACKEND_URL}/api/auth/orders`,{credentials:'include'});
+            const data=await res.json();
+            const orders=data.orders||[];
+            document.getElementById('ordersLoading').style.display='none';
+            if(!orders.length){document.getElementById('noOrders').style.display='block';return;}
+            document.getElementById('ordersList').style.display='block';
+            document.getElementById('ordersList').innerHTML=orders.map(o=>{
+                const date=new Date(o.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+                const itemsHtml=(o.items||[]).slice(0,2).map(i=>`
+                    <div class="order-item-row">
+                        <div class="order-item-placeholder">${(i.name||'').split(' ')[0]}</div>
+                        <div><div class="order-item-name">${i.name||''}</div><div class="order-item-qty">Qty: ${i.quantity||1}</div></div>
+                    </div>`).join('');
+                const more=(o.items||[]).length>2?`<p style="font-size:.75rem;color:var(--color-text-muted);margin-top:.5rem;">+${o.items.length-2} more item(s)</p>`:'';
+                const status=(o.orderStatus||'confirmed').toLowerCase();
+                return `<div class="order-card">
+                    <div class="order-card-head">
+                        <div><div class="order-id-label">Order ID</div><div class="order-id-val">${o.orderId||'—'}</div></div>
+                        <div style="text-align:right;"><div class="order-id-label">Placed on</div><div class="order-id-val">${date}</div></div>
+                        <span class="order-status-badge ${status}">${status}</span>
+                    </div>
+                    <div class="order-card-body"><div class="order-items-list">${itemsHtml}${more}</div></div>
+                    <div class="order-card-foot">
+                        <div><div class="order-total-label">Order Total</div><div class="order-total-val">₹${Number(o.total||0).toLocaleString('en-IN')}</div></div>
+                        ${o.shiprocket?.trackingUrl?`<a href="${o.shiprocket.trackingUrl}" target="_blank" class="order-track-btn">Track Order →</a>`:''}
+                    </div>
+                </div>`;
+            }).join('');
+        } catch(e){
+            document.getElementById('ordersLoading').style.display='none';
+            document.getElementById('noOrders').style.display='block';
+        }
+    }
+
+    function loadAddresses(user){
+        const list=document.getElementById('addressesList');
+        const none=document.getElementById('noAddresses');
+        if(!user.addresses||!user.addresses.length){list.innerHTML='';none.style.display='block';return;}
+        none.style.display='none';
+        list.innerHTML=user.addresses.map((a,idx)=>`
+            <div class="addr-card ${a.isDefault?'default':''}">
+                ${a.isDefault?'<span class="addr-default-badge">Default</span>':''}
+                <div class="addr-name">${a.firstName||''} ${a.lastName||''}</div>
+                <div class="addr-text">${a.address||''}${a.address2?', '+a.address2:''}<br>${a.city||''}, ${a.state||''} - ${a.pincode||''}</div>
+                ${a.phone?`<div class="addr-text" style="margin-top:.375rem;">📞 +91 ${a.phone}</div>`:''}
+                <div style="display:flex;gap:.5rem;margin-top:.875rem;flex-wrap:wrap;">
+                    ${!a.isDefault?`<button onclick="setDefaultAddress('${a._id}')" style="flex:1;min-width:70px;padding:.4375rem .75rem;font-size:.75rem;font-weight:500;border:1px solid var(--color-primary);border-radius:var(--radius-sm);background:var(--color-accent-green);cursor:pointer;color:var(--color-primary);">★ Set Default</button>`:'<span style="font-size:.75rem;color:var(--color-primary);padding:.4375rem 0;font-weight:500;">✓ Default Address</span>'}
+                    <button onclick="deleteAddress('${a._id}')" style="flex:1;min-width:70px;padding:.4375rem .75rem;font-size:.75rem;font-weight:500;border:1px solid #fca5a5;border-radius:var(--radius-sm);background:#fff5f5;cursor:pointer;color:#dc2626;">🗑 Remove</button>
+                </div>
+            </div>`).join('');
+    }
+
+    function openAddressModal(){
+        clearErr('addrError');
+        ['addrFirst','addrLast','addrPhone','addrStreet','addrStreet2','addrCity','addrPincode'].forEach(id=>document.getElementById(id).value='');
+        document.getElementById('addrState').selectedIndex=0;
+        document.getElementById('addrDefault').checked=false;
+        document.getElementById('addrOverlay').classList.add('active');
+        document.body.style.overflow='hidden';
+        setTimeout(()=>document.getElementById('addrFirst').focus(),100);
+    }
+
+    function closeAddressModal(){
+        document.getElementById('addrOverlay').classList.remove('active');
+        document.body.style.overflow='';
+    }
+
+    async function handleSaveAddress(){
+        clearErr('addrError');
+        const firstName = document.getElementById('addrFirst').value.trim();
+        const lastName  = document.getElementById('addrLast').value.trim();
+        const phone     = document.getElementById('addrPhone').value.replace(/\D/g,'');
+        const address   = document.getElementById('addrStreet').value.trim();
+        const address2  = document.getElementById('addrStreet2').value.trim();
+        const city      = document.getElementById('addrCity').value.trim();
+        const pincode   = document.getElementById('addrPincode').value.trim();
+        const state     = document.getElementById('addrState').value;
+        const isDefault = document.getElementById('addrDefault').checked;
+
+        if(!firstName||!address||!city||!pincode||!state){showErr('addrError','Please fill all required fields');return;}
+        if(phone&&phone.length!==10){showErr('addrError','Enter a valid 10-digit phone number');return;}
+        if(pincode.length!==6){showErr('addrError','Enter a valid 6-digit PIN code');return;}
+
+        const btn=document.getElementById('addrSaveBtn');
+        btn.disabled=true; btn.textContent='Saving...';
+
+        try {
+            // Correct API: POST /api/auth/address (adds one address)
+            const res=await fetch(`${BACKEND_URL}/api/auth/address`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                credentials:'include',
+                body:JSON.stringify({firstName,lastName,phone,address,address2,city,state,pincode,isDefault})
+            });
+            const data=await res.json();
+            if(data.success){
+                // Update local cache with server-returned addresses (have real _id values)
+                if(window.auth&&window.auth.user){
+                    window.auth.user.addresses=data.addresses;
+                    try{const c=JSON.parse(localStorage.getItem('vriksha_user')||'{}');c.addresses=data.addresses;localStorage.setItem('vriksha_user',JSON.stringify(c));}catch(e){}
+                }
+                loadAddresses({addresses:data.addresses});
+                closeAddressModal();
+                showToast('Address saved! 📍');
+            } else {
+                showErr('addrError',data.error||'Could not save address. Are you logged in?');
+            }
+        } catch(e){
+            showErr('addrError','Connection failed. Please try again.');
+        } finally {
+            btn.disabled=false; btn.textContent='Save Address';
+        }
+    }
+
+    async function deleteAddress(addressId){
+        if(!confirm('Remove this address?'))return;
+        try{
+            // Correct API: DELETE /api/auth/address/:id
+            const res=await fetch(`${BACKEND_URL}/api/auth/address/${addressId}`,{
+                method:'DELETE',
+                credentials:'include'
+            });
+            const data=await res.json();
+            if(data.success){
+                if(window.auth&&window.auth.user){
+                    window.auth.user.addresses=data.addresses;
+                    try{const c=JSON.parse(localStorage.getItem('vriksha_user')||'{}');c.addresses=data.addresses;localStorage.setItem('vriksha_user',JSON.stringify(c));}catch(e){}
+                }
+                loadAddresses({addresses:data.addresses});
+                showToast('Address removed');
+            } else {
+                showToast('Could not remove address',false);
+            }
+        }catch(e){showToast('Connection failed',false);}
+    }
+
+    async function setDefaultAddress(addressId){
+        // Backend doesn't have a dedicated default endpoint — we POST a new version
+        // by finding the address and re-saving with isDefault:true via profile update
+        // Simplest: just reload from server and mark locally, show note to user
+        const user=window.auth&&window.auth.user;
+        if(!user||!user.addresses)return;
+        // Delete and re-add as default (workaround since backend has no PUT address)
+        const addr=user.addresses.find(a=>a._id===addressId||a._id?.toString()===addressId);
+        if(!addr){showToast('Address not found',false);return;}
+        try{
+            // Delete old
+            const del=await fetch(`${BACKEND_URL}/api/auth/address/${addressId}`,{method:'DELETE',credentials:'include'});
+            const delData=await del.json();
+            if(!delData.success){showToast('Could not update',false);return;}
+            // Re-add as default
+            const add=await fetch(`${BACKEND_URL}/api/auth/address`,{
+                method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+                body:JSON.stringify({...addr,isDefault:true})
+            });
+            const addData=await add.json();
+            if(addData.success){
+                if(window.auth&&window.auth.user){
+                    window.auth.user.addresses=addData.addresses;
+                    try{const c=JSON.parse(localStorage.getItem('vriksha_user')||'{}');c.addresses=addData.addresses;localStorage.setItem('vriksha_user',JSON.stringify(c));}catch(e){}
+                }
+                loadAddresses({addresses:addData.addresses});
+                showToast('Default address updated!');
+            }
+        }catch(e){showToast('Connection failed',false);}
+    }
+
+    async function saveProfile(){
+        try {
+            const res=await fetch(`${BACKEND_URL}/api/auth/profile`,{method:'PUT',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({firstName:document.getElementById('pfFirst').value,lastName:document.getElementById('pfLast').value,email:document.getElementById('pfEmail').value})});
+            const data=await res.json();
+            if(data.success){
+                showToast('Profile updated!');
+                if(window.auth&&data.user){window.auth.user={...window.auth.user,...data.user};}
+                const n=`${data.user?.firstName||''} ${data.user?.lastName||''}`.trim();
+                if(n){document.getElementById('dashName').textContent=n;document.getElementById('dashAvatar').textContent=n[0].toUpperCase();}
+            } else { showToast(data.error||'Could not save',false); }
+        } catch(e){showToast('Connection failed',false);}
+    }
+
+    function openCPW(){document.getElementById('cpwOverlay').classList.add('active');}
+    function closeCPW(){document.getElementById('cpwOverlay').classList.remove('active');clearErr('cpwError');}
+    async function handleChangePassword(){
+        clearErr('cpwError');
+        const current=document.getElementById('cpwCurrent').value;
+        const newPass=document.getElementById('cpwNew').value;
+        const confirm=document.getElementById('cpwConfirm').value;
+        if(newPass.length<8){showErr('cpwError','New password must be 8+ characters');return;}
+        if(newPass!==confirm){showErr('cpwError','Passwords do not match');return;}
+        try {
+            const res=await fetch(`${BACKEND_URL}/api/auth/change-password`,{method:'PUT',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({currentPassword:current,newPassword:newPass})});
+            const data=await res.json();
+            if(data.success){closeCPW();showToast('Password updated!');}
+            else{showErr('cpwError',data.error||'Could not update password');}
+        } catch(e){showErr('cpwError','Connection failed');}
+    }
+
+    async function handleLogout(){
+        if(window.auth) await window.auth.logout();
+        else{try{await fetch(`${BACKEND_URL}/api/auth/logout`,{method:'POST',credentials:'include'});}catch(e){}}
+        window.location.reload();
+    }
+
+    async function initAccountPage(){
+        // Step 1: localStorage — instant, zero network
+        try {
+            const cached=localStorage.getItem('vriksha_user');
+            if(cached){
+                const user=JSON.parse(cached);
+                if(user&&(user._id||user.phone)){
+                    loadDashboard(user);
+                    _backgroundVerify();
+                    return;
+                }
+            }
+        } catch(e){ localStorage.removeItem('vriksha_user'); }
+        // Step 2: auth.js already resolved?
+        if(window.auth&&window.auth.isLoggedIn&&window.auth.user){
+            loadDashboard(window.auth.user); return;
+        }
+        // Step 3: not logged in
+        document.getElementById('authWall').style.display='block';
+    }
+
+    async function _backgroundVerify(){
+        try {
+            const controller=new AbortController();
+            const timer=setTimeout(()=>controller.abort(),8000);
+            const res=await fetch(`${BACKEND_URL}/api/auth/me`,{credentials:'include',signal:controller.signal});
+            clearTimeout(timer);
+            const data=await res.json();
+            if(data.loggedIn&&data.user){
+                if(window.auth){window.auth.user=data.user;window.auth.isLoggedIn=true;window.auth._saveToCache&&window.auth._saveToCache(data.user);}
+                try{localStorage.setItem('vriksha_user',JSON.stringify(data.user));}catch(e){}
+                const u=data.user,n=`${u.firstName||''} ${u.lastName||''}`.trim();
+                if(n){document.getElementById('dashName').textContent=n;document.getElementById('dashAvatar').textContent=n[0].toUpperCase();}
+                if(u.addresses)loadAddresses(u);
+                loadOrders();
+            } else {
+                try{localStorage.removeItem('vriksha_user');}catch(e){}
+                if(window.auth){window.auth.user=null;window.auth.isLoggedIn=false;}
+                document.getElementById('dashboard').style.display='none';
+                document.getElementById('authWall').style.display='block';
+            }
+        } catch(e){}
+    }
+
+    window.addEventListener('authChange',e=>{
+        if(e.detail?.isLoggedIn&&e.detail?.user) loadDashboard(e.detail.user);
+        else{document.getElementById('dashboard').style.display='none';document.getElementById('authWall').style.display='block';}
+    });
+
+    // Hide authWall — shown only if not logged in
+    document.getElementById('authWall').style.display='none';
+
+    document.addEventListener('DOMContentLoaded',()=>{
+        // Bind OTP inputs
+        const inputs=document.querySelectorAll('#loginOtpInputs .otp-input');
+        inputs.forEach((inp,idx)=>{
+            inp.addEventListener('input',e=>{const v=e.target.value.replace(/\D/g,'');e.target.value=v.slice(0,1);if(v&&idx<inputs.length-1)inputs[idx+1].focus();});
+            inp.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!e.target.value&&idx>0)inputs[idx-1].focus();});
+        });
+        initAccountPage();
+    });
+    </script>
+</body>
+</html>

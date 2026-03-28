@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | VRIKSHA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .order-confirmation { min-height: 100vh; background: var(--color-bg); padding: 6rem 1.5rem 4rem; display: flex; align-items: center; justify-content: center; }
+        .confirmation-card { background: var(--color-surface); border-radius: var(--radius-lg); padding: 3rem 2rem; max-width: 600px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); }
+        @media (min-width: 640px) { .confirmation-card { padding: 4rem 3rem; } }
+        
+        .success-animation { width: 100px; height: 100px; margin: 0 auto 2rem; position: relative; }
+        .success-circle { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, var(--color-accent-green) 0%, #c8e6c9 100%); display: flex; align-items: center; justify-content: center; animation: scaleIn 0.5s ease; }
+        .success-check { color: var(--color-primary); animation: checkDraw 0.5s ease 0.3s forwards; opacity: 0; }
+        @keyframes scaleIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        @keyframes checkDraw { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+        
+        .confirmation-title { font-family: var(--font-display); font-size: clamp(1.75rem, 5vw, 2.5rem); margin-bottom: 0.5rem; color: var(--color-text); }
+        .confirmation-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); margin-bottom: 2rem; }
+        
+        .order-number-box { background: var(--color-bg); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem; }
+        .order-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 0.5rem; }
+        .order-number { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--color-primary); letter-spacing: 0.05em; }
+        
+        .order-details { text-align: left; border-top: 1px solid var(--color-border-light); padding-top: 2rem; margin-bottom: 2rem; }
+        .detail-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--color-border-light); }
+        .detail-row:last-child { border-bottom: none; font-weight: 600; font-size: 1.125rem; padding-top: 1rem; margin-top: 0.5rem; border-top: 1px solid var(--color-border); }
+        .detail-label { color: var(--color-text-secondary); }
+        .detail-value { color: var(--color-text); font-weight: 500; }
+        
+        .confirmation-message { background: linear-gradient(135deg, var(--color-bg-cream) 0%, var(--color-accent-green) 100%); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem; }
+        .confirmation-message p { font-size: 0.9375rem; color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+        .confirmation-message strong { color: var(--color-primary); }
+        
+        .delivery-estimate { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1rem; background: var(--color-bg); border-radius: var(--radius-md); margin-bottom: 2rem; }
+        .delivery-icon { font-size: 2rem; }
+        .delivery-text { text-align: left; }
+        .delivery-label { font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .delivery-date { font-weight: 600; color: var(--color-text); }
+        
+        .action-buttons { display: flex; flex-direction: column; gap: 1rem; }
+        @media (min-width: 480px) { .action-buttons { flex-direction: row; justify-content: center; } }
+        .action-buttons .btn { min-width: 180px; }
+        
+        .help-text { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border-light); font-size: 0.875rem; color: var(--color-text-muted); }
+        .help-text a { color: var(--color-primary); text-decoration: underline; }
+        
+        /* Confetti Animation */
+        .confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; overflow: hidden; }
+        .confetti-piece { position: absolute; width: 10px; height: 10px; top: -10px; animation: confettiFall 3s ease-out forwards; }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav" style="justify-content: center;">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">❧</span>
+                <span class="logo-text">VRIKSHA</span>
+            </a>
+        </nav>
+    </header>
+
+    <main class="order-confirmation">
+        <div class="confirmation-card">
+            <div class="success-animation">
+                <div class="success-circle">
+                    <svg class="success-check" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="confirmation-title">Thank You!</h1>
+            <p class="confirmation-subtitle">Your order has been placed successfully</p>
+
+            <div class="order-number-box">
+                <div class="order-label">Order Number</div>
+                <div class="order-number" id="orderNumber">VRK-2024-XXXX</div>
+            </div>
+
+            <div class="confirmation-message">
+                <p>We've sent a confirmation email to <strong id="customerEmail">your email</strong> with your order details and tracking information.</p>
+            </div>
+
+            <div class="delivery-estimate">
+                <span class="delivery-icon">🚚</span>
+                <div class="delivery-text">
+                    <div class="delivery-label">Estimated Delivery</div>
+                    <div class="delivery-date" id="deliveryDate">In 3-5 business days</div>
+                </div>
+            </div>
+
+            <div class="order-details" id="orderDetails">
+                <div class="detail-row">
+                    <span class="detail-label">Subtotal</span>
+                    <span class="detail-value" id="subtotal">₹0</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Shipping</span>
+                    <span class="detail-value" id="shipping">FREE</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Payment Method</span>
+                    <span class="detail-value" id="paymentMethod">UPI</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total Paid</span>
+                    <span class="detail-value" id="totalPaid">₹0</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+                <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            </div>
+
+            <div class="help-text">
+                <p>Questions about your order? <a href="contact.html">Contact our support team</a></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confetti Container -->
+    <div class="confetti" id="confetti"></div>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        const BACKEND_URL = 'https://vriksha-production.up.railway.app';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Read real order ID from URL — e.g. order-confirmed.html?order=VRK-xxx
+            const params   = new URLSearchParams(window.location.search);
+            const orderId  = params.get('order');
+            const method   = params.get('method'); // 'cod' if COD order
+
+            // Show the order ID immediately
+            if (orderId) {
+                document.getElementById('orderNumber').textContent = orderId;
+            } else {
+                document.getElementById('orderNumber').textContent = 'Confirmed ✓';
+            }
+
+            // Payment method label
+            if (method === 'cod') {
+                document.getElementById('paymentMethod').textContent = 'Cash on Delivery';
+            } else {
+                document.getElementById('paymentMethod').textContent = 'Online Payment';
+            }
+
+            // Try to fetch real order data from backend
+            if (orderId) {
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/payment/order-status?orderId=${encodeURIComponent(orderId)}`);
+                    if (res.ok) {
+                        const order = await res.json();
+                        if (order.customer?.email) {
+                            document.getElementById('customerEmail').textContent = order.customer.email;
+                        }
+                        if (order.subtotal != null) {
+                            document.getElementById('subtotal').textContent = '₹' + Number(order.subtotal).toLocaleString('en-IN');
+                        }
+                        if (order.shippingCharge != null) {
+                            document.getElementById('shipping').textContent = order.shippingCharge === 0 ? 'FREE' : '₹' + order.shippingCharge;
+                        }
+                        if (order.total != null) {
+                            document.getElementById('totalPaid').textContent = '₹' + Number(order.total).toLocaleString('en-IN');
+                        }
+                        if (order.paymentMethod) {
+                            document.getElementById('paymentMethod').textContent = order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment';
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not fetch order details:', e.message);
+                    // Non-critical — page still works without it
+                }
+            }
+
+            // Delivery date (3-5 business days)
+            const today = new Date();
+            const deliveryStart = new Date(today); deliveryStart.setDate(today.getDate() + 3);
+            const deliveryEnd   = new Date(today); deliveryEnd.setDate(today.getDate() + 5);
+            const fmt = { month: 'short', day: 'numeric' };
+            document.getElementById('deliveryDate').textContent =
+                `${deliveryStart.toLocaleDateString('en-IN', fmt)} – ${deliveryEnd.toLocaleDateString('en-IN', fmt)}`;
+
+            // Clear cart
+            localStorage.removeItem('vriksha_cart');
+
+            // Confetti
+            createConfetti();
+        });
+
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti');
+            const colors = ['#4a6741', '#c9a962', '#a5d6a7', '#fff59d', '#81c784'];
+            
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = Math.random() * 2 + 's';
+                piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confettiContainer.appendChild(piece);
+            }
+
+            // Remove confetti after animation
+            setTimeout(() => {
+                confettiContainer.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

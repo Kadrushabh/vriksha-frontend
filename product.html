@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product | VRIKSHA - Premium Ayurvedic Wellness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Product Detail Page Styles */
+        .product-detail-section { padding: calc(var(--header-h) + var(--announce-h) + 2rem) 0 4rem; background: var(--color-bg); min-height: calc(100vh - 120px); }
+        .product-detail-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 1024px) { .product-detail-grid { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+        
+        /* Product Gallery */
+        .product-gallery { position: sticky; top: 120px; }
+        .main-image { width: 100%; aspect-ratio: 1; background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; box-shadow: var(--shadow-md); }
+        .main-image img { width: 100%; height: 100%; object-fit: contain; padding: 2rem; }
+        .thumbnail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+        .thumbnail { aspect-ratio: 1; background: var(--color-surface); border-radius: var(--radius-md); overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all var(--transition-fast); }
+        .thumbnail:hover, .thumbnail.active { border-color: var(--color-primary); }
+        .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Product Info */
+        .product-detail-info { padding: 1rem 0; }
+        .product-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1rem; }
+        .product-breadcrumb a { color: var(--color-text-secondary); }
+        .product-breadcrumb a:hover { color: var(--color-primary); }
+        .product-badges { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .badge { padding: 0.375rem 0.75rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border-radius: var(--radius-full); }
+        .badge-bestseller { background: var(--color-secondary); color: white; }
+        .badge-new { background: var(--color-primary); color: white; }
+        .badge-organic { background: var(--color-accent-green); color: var(--color-primary-dark); }
+        .product-detail-title { font-family: var(--font-display); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 500; margin-bottom: 0.5rem; line-height: 1.2; }
+        .product-detail-subtitle { font-size: 1rem; color: var(--color-text-secondary); margin-bottom: 1rem; }
+        .product-rating-large { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border-light); }
+        .stars-large { color: var(--color-secondary); font-size: 1.125rem; letter-spacing: -1px; }
+        .rating-text { font-size: 0.875rem; color: var(--color-text-secondary); }
+        .rating-text strong { color: var(--color-text); }
+        
+        /* Pricing */
+        .product-pricing { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
+        .price-current { font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--color-text); }
+        .price-original { font-size: 1.25rem; color: var(--color-text-muted); text-decoration: line-through; }
+        .price-discount { font-size: 0.875rem; font-weight: 600; color: #4caf50; background: #e8f5e9; padding: 0.25rem 0.75rem; border-radius: var(--radius-full); }
+        
+        /* Product Options */
+        .product-options { margin-bottom: 1.5rem; }
+        .option-group { margin-bottom: 1.25rem; }
+        .option-label { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-text); }
+        .quantity-selector { display: flex; align-items: center; gap: 0; border: 1px solid var(--color-border); border-radius: var(--radius-md); width: fit-content; }
+        .qty-btn-large { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: var(--color-text-secondary); background: var(--color-bg); border: none; cursor: pointer; transition: all var(--transition-fast); }
+        .qty-btn-large:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+        .qty-btn-large:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+        .qty-btn-large:hover { background: var(--color-primary); color: white; }
+        .qty-input { width: 60px; height: 48px; text-align: center; font-size: 1rem; font-weight: 600; border: none; border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); font-family: var(--font-body); }
+        .qty-input:focus { outline: none; }
+        
+        /* Add to Cart Section */
+        .add-to-cart-section { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+        @media (min-width: 640px) { .add-to-cart-section { flex-direction: row; } }
+        .btn-add-cart { flex: 1; padding: 1rem 2rem; font-size: 1rem; }
+        .btn-buy-now { padding: 1rem 2rem; font-size: 1rem; background: var(--color-text); }
+        .btn-buy-now:hover { background: var(--color-primary-dark); }
+        
+        /* Trust Indicators */
+        .product-trust { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1.5rem; background: var(--color-bg); border-radius: var(--radius-lg); margin-bottom: 2rem; }
+        @media (min-width: 640px) { .product-trust { grid-template-columns: repeat(4, 1fr); } }
+        .trust-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem; }
+        .trust-item-icon { font-size: 1.5rem; }
+        .trust-item-text { font-size: 0.75rem; color: var(--color-text-secondary); line-height: 1.3; }
+        
+        /* Product Tabs */
+        .product-tabs { border-top: 1px solid var(--color-border-light); padding-top: 2rem; }
+        .tab-buttons { display: flex; gap: 0; border-bottom: 1px solid var(--color-border); margin-bottom: 1.5rem; overflow-x: auto; }
+        .tab-btn { padding: 1rem 1.5rem; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); background: none; border: none; cursor: pointer; white-space: nowrap; position: relative; transition: color var(--transition-fast); }
+        .tab-btn::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--color-primary); transform: scaleX(0); transition: transform var(--transition-base); }
+        .tab-btn:hover { color: var(--color-text); }
+        .tab-btn.active { color: var(--color-primary); }
+        .tab-btn.active::after { transform: scaleX(1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        /* Tab Content Styles */
+        .tab-content h4 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 1rem; }
+        .tab-content p { font-size: 0.9375rem; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1rem; }
+        .benefits-list { display: grid; gap: 0.75rem; }
+        .benefit-item { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9375rem; color: var(--color-text-secondary); }
+        .benefit-icon { color: var(--color-primary); font-size: 1.125rem; margin-top: 0.125rem; }
+        .ingredients-box { background: var(--color-bg); border-radius: var(--radius-md); padding: 1.25rem; }
+        .ingredients-box p { margin-bottom: 0; }
+        .usage-steps { counter-reset: step; }
+        .usage-step { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--color-border-light); }
+        .usage-step:last-child { border-bottom: none; }
+        .step-num { width: 32px; height: 32px; background: var(--color-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600; flex-shrink: 0; }
+        .step-text { font-size: 0.9375rem; color: var(--color-text-secondary); line-height: 1.6; }
+        
+        /* Reviews Section */
+        .reviews-summary { display: flex; gap: 2rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-border-light); flex-wrap: wrap; }
+        .rating-big { text-align: center; }
+        .rating-number { font-family: var(--font-display); font-size: 3rem; font-weight: 600; color: var(--color-text); }
+        .rating-stars-big { color: var(--color-secondary); font-size: 1.25rem; margin-bottom: 0.25rem; }
+        .rating-count-text { font-size: 0.8125rem; color: var(--color-text-muted); }
+        .rating-bars { flex: 1; min-width: 200px; }
+        .rating-bar-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+        .bar-label { font-size: 0.8125rem; color: var(--color-text-secondary); min-width: 50px; }
+        .bar-track { flex: 1; height: 8px; background: var(--color-bg); border-radius: var(--radius-full); overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--color-secondary); border-radius: var(--radius-full); }
+        .bar-count { font-size: 0.8125rem; color: var(--color-text-muted); min-width: 30px; text-align: right; }
+        
+        .review-card { padding: 1.5rem 0; border-bottom: 1px solid var(--color-border-light); }
+        .review-card:last-child { border-bottom: none; }
+        .review-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+        .reviewer-avatar { width: 40px; height: 40px; background: var(--color-accent-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--color-primary); }
+        .reviewer-info { flex: 1; }
+        .reviewer-name { font-weight: 500; font-size: 0.9375rem; }
+        .review-date { font-size: 0.75rem; color: var(--color-text-muted); }
+        .review-stars { color: var(--color-secondary); font-size: 0.875rem; }
+        .review-text { font-size: 0.9375rem; color: var(--color-text-secondary); line-height: 1.6; }
+        .verified-purchase { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: var(--color-primary); margin-top: 0.5rem; }
+        
+        /* Related Products */
+        .related-section { padding: 4rem 0; background: var(--color-surface); }
+        .related-section .section-header { margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="cart-close" id="cartClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-empty" id="cartEmpty">
+            <span class="cart-empty-icon">🛒</span>
+            <p>Your cart is empty</p>
+        </div>
+        <div class="cart-footer" id="cartFooter">
+            <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+            <p class="cart-note">Shipping calculated at checkout</p>
+            <button class="btn btn-primary btn-full" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </aside>
+
+    <!-- Navigation -->
+    <header class="header" id="header">
+        <div class="announcement-bar">
+            <p>Free shipping on orders above ₹999 • Use code <strong>NATURE15</strong> for 15% off</p>
+        </div>
+        <nav class="nav">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-left">
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="shop.html#collections" class="nav-link">Collections</a>
+                <a href="our-story.html" class="nav-link">Our Story</a>
+            </div>
+            <a href="index.html" class="logo">
+                <span class="logo-icon">❧</span>
+                <span class="logo-text">VRIKSHA</span>
+            </a>
+            <div class="nav-right">
+                <a href="our-story.html#rituals" class="nav-link">Rituals</a>
+                <a href="our-story.html#journal" class="nav-link">Journal</a>
+                <div class="nav-icons">
+                    <button class="icon-btn" id="userBtnDesktop" onclick="window.location.href='account.html'" aria-label="Account">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                            <path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-content">
+            <a href="index.html" class="mobile-nav-link">Home</a>
+            <a href="shop.html" class="mobile-nav-link">Shop</a>
+            <a href="our-story.html" class="mobile-nav-link">Our Story</a>
+            <a href="contact.html" class="mobile-nav-link">Contact</a>
+        </div>
+        <div class="mobile-nav-footer">
+            <p>❧ VRIKSHA · Rooted in Ancient Wisdom</p>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+   
+
+    <main>
+        <section class="product-detail-section">
+            <div class="container">
+                <div class="product-detail-grid">
+                    <!-- Product Gallery -->
+                    <div class="product-gallery">
+                        <div class="main-image" id="mainImage">
+                            <img src="" alt="" id="mainProductImage">
+                        </div>
+                        <div class="thumbnail-grid" id="thumbnailGrid">
+                            <!-- Thumbnails loaded by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-detail-info">
+                        <div class="product-breadcrumb">
+                            <a href="index.html">Home</a>
+                            <span>/</span>
+                            <a href="shop.html">Shop</a>
+                            <span>/</span>
+                            <span id="productCategory">Category</span>
+                        </div>
+
+                        <div class="product-badges" id="productBadges">
+                            <!-- Badges loaded by JS -->
+                        </div>
+
+                        <h1 class="product-detail-title" id="productTitle">Product Name</h1>
+                        <p class="product-detail-subtitle" id="productSubtitle">Product subtitle</p>
+
+                        <div class="product-rating-large">
+                            <div class="stars-large" id="productStars">★★★★★</div>
+                            <div class="rating-text">
+                                <strong id="productRating">5.0</strong> • <span id="productReviews">128 reviews</span>
+                            </div>
+                        </div>
+
+                        <div class="product-pricing">
+                            <span class="price-current" id="productPrice">₹549</span>
+                            <span class="price-original" id="productOriginalPrice">₹699</span>
+                            <span class="price-discount" id="productDiscount">22% OFF</span>
+                        </div>
+
+                        <div class="product-options">
+                            <div class="option-group">
+                                <label class="option-label">Quantity</label>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn-large" id="qtyMinus">−</button>
+                                    <input type="number" class="qty-input" id="qtyInput" value="1" min="1" max="10">
+                                    <button class="qty-btn-large" id="qtyPlus">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="add-to-cart-section">
+                            <button class="btn btn-primary btn-add-cart" id="addToCartBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                            <button class="btn btn-primary btn-buy-now" id="buyNowBtn">Buy Now</button>
+                        </div>
+
+                        <div class="product-trust">
+                            <div class="trust-item">
+                                <span class="trust-item-icon">🌿</span>
+                                <span class="trust-item-text">100% Organic</span>
+                            </div>
+                            <div class="trust-item">
+                                <span class="trust-item-icon">🔬</span>
+                                <span class="trust-item-text">Lab Tested</span>
+                            </div>
+                            <div class="trust-item">
+                                <span class="trust-item-icon">🚚</span>
+                                <span class="trust-item-text">Free Shipping 999+</span>
+                            </div>
+                            <div class="trust-item">
+                                <span class="trust-item-icon">↩️</span>
+                                <span class="trust-item-text">Easy Returns</span>
+                            </div>
+                        </div>
+
+                        <!-- Product Tabs -->
+                        <div class="product-tabs">
+                            <div class="tab-buttons">
+                                <button class="tab-btn active" data-tab="description">Description</button>
+                                <button class="tab-btn" data-tab="benefits">Benefits</button>
+                                <button class="tab-btn" data-tab="ingredients">Ingredients</button>
+                                <button class="tab-btn" data-tab="usage">How to Use</button>
+                                <button class="tab-btn" data-tab="reviews">Reviews</button>
+                            </div>
+
+                            <div class="tab-content active" id="tab-description">
+                                <p id="productDescription">Product description goes here...</p>
+                            </div>
+
+                            <div class="tab-content" id="tab-benefits">
+                                <div class="benefits-list" id="benefitsList">
+                                    <!-- Benefits loaded by JS -->
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="tab-ingredients">
+                                <div class="ingredients-box">
+                                    <h4>Active Ingredients</h4>
+                                    <p id="productIngredients">Ingredients info here...</p>
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="tab-usage">
+                                <div class="usage-steps" id="usageSteps">
+                                    <!-- Usage steps loaded by JS -->
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="tab-reviews">
+                                <div class="reviews-summary">
+                                    <div class="rating-big">
+                                        <div class="rating-number" id="avgRating">5.0</div>
+                                        <div class="rating-stars-big">★★★★★</div>
+                                        <div class="rating-count-text" id="totalReviews">Based on 128 reviews</div>
+                                    </div>
+                                    <div class="rating-bars">
+                                        <div class="rating-bar-row">
+                                            <span class="bar-label">5 star</span>
+                                            <div class="bar-track"><div class="bar-fill" style="width: 85%"></div></div>
+                                            <span class="bar-count">109</span>
+                                        </div>
+                                        <div class="rating-bar-row">
+                                            <span class="bar-label">4 star</span>
+                                            <div class="bar-track"><div class="bar-fill" style="width: 10%"></div></div>
+                                            <span class="bar-count">13</span>
+                                        </div>
+                                        <div class="rating-bar-row">
+                                            <span class="bar-label">3 star</span>
+                                            <div class="bar-track"><div class="bar-fill" style="width: 4%"></div></div>
+                                            <span class="bar-count">5</span>
+                                        </div>
+                                        <div class="rating-bar-row">
+                                            <span class="bar-label">2 star</span>
+                                            <div class="bar-track"><div class="bar-fill" style="width: 1%"></div></div>
+                                            <span class="bar-count">1</span>
+                                        </div>
+                                        <div class="rating-bar-row">
+                                            <span class="bar-label">1 star</span>
+                                            <div class="bar-track"><div class="bar-fill" style="width: 0%"></div></div>
+                                            <span class="bar-count">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="reviews-list" id="reviewsList">
+                                    <!-- Reviews loaded by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Related Products -->
+        <section class="related-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">You May Also Like</span>
+                    <h2 class="section-title">Related <em>Products</em></h2>
+                </div>
+                <div class="products-grid" id="relatedProducts">
+                    <!-- Related products loaded by JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="index.html" class="footer-logo">
+                            <span class="logo-icon">❧</span>
+                            <span class="logo-text">VRIKSHA</span>
+                        </a>
+                        <p>Premium Ayurvedic wellness rooted in ancient wisdom.</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Shop</h4>
+                        <ul><li><a href="shop.html">All Products</a></li></ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Company</h4>
+                        <ul><li><a href="our-story.html">Our Story</a></li></ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="shipping.html">Shipping Policy</a></li>
+                            <li><a href="returns.html">Returns & Refunds</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container"><p>© 2026 Vriksha Wellness Pvt. Ltd.</p></div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Nav -->
+        <nav class="mobile-bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="shop.html" class="bottom-nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.95-1.57l1.65-8.42H6"/></svg>
+            <span>Shop</span>
+        </a>
+        <a href="account.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Account</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="if(window.cart)cart.openCart();return false;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            <span id="bottomCartBadge" class="bottom-nav-badge" style="display:none;">0</span>
+            <span>Cart</span>
+        </a>
+    </nav>
+
+    <button class="back-to-top" id="backToTop"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    <div class="toast" id="toast"><span class="toast-icon">✓</span><span class="toast-message" id="toastMessage">Added to cart!</span></div>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="product-detail.js"></script>
+</body>
+</html>
