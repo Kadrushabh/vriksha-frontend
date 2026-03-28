@@ -225,8 +225,17 @@
        <!-- LEFT: Form -->
        <div class="checkout-form-section">
 
-        <!-- Login prompt -->
-        <div id="checkoutLoginPrompt" style="background:var(--color-accent-green);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;">
+        <!-- Welcome banner (logged-in users) — hidden until auth resolves -->
+        <div id="checkoutWelcomeBanner" style="display:none;background:var(--color-accent-green);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem;align-items:center;gap:0.75rem;">
+         <span style="font-size:1.25rem;">👋</span>
+         <div>
+          <strong style="font-size:0.875rem;" id="checkoutWelcomeName">Welcome back!</strong>
+          <p style="font-size:0.75rem;color:var(--color-text-secondary);margin:0;">Your details have been auto-filled below</p>
+         </div>
+        </div>
+
+        <!-- Login prompt (guest users only) — hidden until auth resolves -->
+        <div id="checkoutLoginPrompt" style="display:none;background:var(--color-bg);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;">
          <div>
           <strong style="font-size:0.8125rem;">Login for faster checkout</strong>
           <p style="font-size:0.75rem;color:var(--color-text-secondary);margin:0;">Auto-fill details & track orders</p>
@@ -597,19 +606,27 @@ window.BACKEND_URL = window.BACKEND_URL || 'https://api.vriksha.store';
         }
       }
 
-      // Hide the "login for faster checkout" prompt — user is already logged in
-      const prompt = document.getElementById('checkoutLoginPrompt');
-      if (prompt) prompt.style.display = 'none';
+      // Show welcome banner, hide guest login prompt
+      const welcome = document.getElementById('checkoutWelcomeBanner');
+      const prompt  = document.getElementById('checkoutLoginPrompt');
+      if (prompt)  prompt.style.display  = 'none';
+      if (welcome) {
+        const name = (user.firstName || '').trim();
+        if (name) document.getElementById('checkoutWelcomeName').textContent = 'Welcome back, ' + name + '!';
+        welcome.style.display = 'flex';
+      }
     },
 
     prefillFromAuth() {
-      // auth.js runs its DOMContentLoaded handler before checkout's (registered first),
-      // so window.auth is already set with cached data — try immediately.
+      // auth.js DOMContentLoaded fires before checkout's (registered first),
+      // so window.auth is synchronously populated from localStorage cache.
       if (window.auth && window.auth.isLoggedIn && window.auth.user) {
         this.prefillFromUser(window.auth.user);
         return;
       }
-      // Not yet resolved — listen for the authChange event auth.js fires after session verify
+      // Not yet resolved — show guest login prompt, then update when auth fires
+      const prompt = document.getElementById('checkoutLoginPrompt');
+      if (prompt) prompt.style.display = 'flex';
       window.addEventListener('authChange', (e) => {
         if (e.detail && e.detail.isLoggedIn && e.detail.user) {
           this.prefillFromUser(e.detail.user);
