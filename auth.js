@@ -57,13 +57,11 @@ class VrikshaAuth {
         this._saveToCache(data.user);
         this.updateUI();
       } else {
-        // Server says not logged in — only clear if we have no cached user
-        // (don't log out just because Railway restarted and lost in-memory session)
-        if (!this.isLoggedIn) {
-          this._clearCache();
-        }
-        // If user was cached as logged in, keep them logged in
-        // They'll be properly logged out only when they click logout
+        // Server explicitly says session is invalid — clear cache and log out
+        this._clearCache();
+        this.user = null;
+        this.isLoggedIn = false;
+        this.updateUI();
       }
     } catch (e) {
       // Network error or timeout — keep showing cached login, don't log out

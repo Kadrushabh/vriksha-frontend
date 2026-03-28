@@ -13,13 +13,20 @@ function initShopPage() {
 
     if (!productsGrid || !window.PRODUCTS) return;
 
-    // Render all products
-    renderProducts(window.PRODUCTS);
+    // Filter by ?category= URL param if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryFilter = urlParams.get('category');
+    const initialProducts = categoryFilter
+        ? window.PRODUCTS.filter(p => p.category === categoryFilter)
+        : window.PRODUCTS;
+
+    // Render products (all or filtered by category)
+    renderProducts(initialProducts);
 
     // Sort functionality
     if (sortSelect) {
         sortSelect.addEventListener('change', () => {
-            let sorted = [...window.PRODUCTS];
+            let sorted = [...initialProducts];
             
             switch (sortSelect.value) {
                 case 'price-low':
