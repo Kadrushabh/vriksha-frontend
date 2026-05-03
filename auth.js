@@ -41,9 +41,13 @@ class VrikshaAuth {
         this.isLoggedIn = true;
         this._saveToCache(data.user);
         this.updateUI();
-      } else if (!this.user) {
-        this.isLoggedIn = false;
-        this.updateUI();
+      } else {
+        // If we already have cached user data, keep user logged in until explicit logout.
+        // This prevents cross-page flicker/logouts when backend session checks are inconsistent.
+        if (!this.user) {
+          this.isLoggedIn = false;
+          this.updateUI();
+        }
       }
     } catch (e) {
       console.log('Session verify skipped (server busy?):', e.message);
@@ -52,43 +56,19 @@ class VrikshaAuth {
 
   async checkSession() { return this._verifySession(); }
 
-
-  async _requestJSON(path, options = {}) {
-    const req = { credentials: 'include', ...options };
-    const urls = [path, `${BACKEND_URL}${path}`];
-    let lastErr = null;
-
-    for (const url of urls) {
-      try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 10000);
-        const res = await fetch(url, { ...req, signal: controller.signal });
-        clearTimeout(timer);
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          return { ok: false, data: data || { error: 'Request failed' } };
-        }
-        return { ok: true, data };
-      } catch (e) {
-        lastErr = e;
-      }
-    }
-
-    throw lastErr || new Error('Network error');
-  }
-
   async login(email, password) {
     const btn = document.getElementById('loginSubmitBtn');
     if (btn) { btn.disabled = true; btn.textContent = 'Logging in...'; }
 
     try {
-      const { ok, data } = await this._requestJSON('/api/auth/login', {
+      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password })
       });
 
-      if (ok && data.success && data.user) {
+      if (data.success && data.user) {
         this.user = data.user;
         this.isLoggedIn = true;
         this._saveToCache(data.user);
@@ -118,9 +98,10 @@ class VrikshaAuth {
     if (btn) { btn.disabled = true; btn.textContent = 'Creating account...'; }
 
     try {
-      const { ok, data } = await this._requestJSON('/api/auth/register', {
+      const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload)
       });
 
