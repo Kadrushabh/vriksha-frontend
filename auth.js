@@ -35,15 +35,8 @@ class VrikshaAuth {
 
   async _verifySession() {
     try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 8000);
-      const res = await fetch(`${BACKEND_URL}/api/auth/me`, {
-        credentials: 'include',
-        signal: controller.signal
-      });
-      clearTimeout(timer);
-      const data = await res.json();
-      if (data.loggedIn && data.user) {
+      const { ok, data } = await this._requestJSON('/api/auth/me');
+      if (ok && data.loggedIn && data.user) {
         this.user = data.user;
         this.isLoggedIn = true;
         this._saveToCache(data.user);
@@ -74,7 +67,6 @@ class VrikshaAuth {
         credentials: 'include',
         body: JSON.stringify({ email, password })
       });
-      const data = await res.json();
 
       if (data.success && data.user) {
         this.user = data.user;
@@ -112,9 +104,8 @@ class VrikshaAuth {
         credentials: 'include',
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
 
-      if (data.success && data.user) {
+      if (ok && data.success && data.user) {
         this.user = data.user;
         this.isLoggedIn = true;
         this._saveToCache(data.user);
