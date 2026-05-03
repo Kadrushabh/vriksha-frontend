@@ -57,11 +57,12 @@ class VrikshaAuth {
         this._saveToCache(data.user);
         this.updateUI();
       } else {
-        // Server explicitly says session is invalid — clear cache and log out
-        this._clearCache();
-        this.user = null;
-        this.isLoggedIn = false;
-        this.updateUI();
+        // If we already have cached user data, keep user logged in until explicit logout.
+        // This prevents cross-page flicker/logouts when backend session checks are inconsistent.
+        if (!this.user) {
+          this.isLoggedIn = false;
+          this.updateUI();
+        }
       }
     } catch (e) {
       // Network error or timeout — keep showing cached login, don't log out
