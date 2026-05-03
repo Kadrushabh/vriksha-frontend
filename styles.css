@@ -919,17 +919,3 @@ em{font-style:italic;color:var(--color-primary)}
 .product-social-proof{margin:2rem 0;border-radius:16px;overflow:hidden;position:relative}
 .product-social-proof img{width:100%;display:block;max-height:460px;object-fit:cover}
 .product-social-proof .overlay{position:absolute;inset:auto 0 0 0;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;padding:1.1rem}
-
-
-.campaign-hero{padding:1.5rem 0;background:#f6f8f3}
-.campaign-hero-alt{background:#eef4e9}
-.campaign-grid{display:block}
-.campaign-image{width:100%;display:block;border-radius:18px;box-shadow:0 20px 45px rgba(0,0,0,.18)}
-.product-campaign-carousel{position:relative;margin:1.25rem 0 2rem}
-.carousel-track{display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow-x:auto;scroll-snap-type:x mandatory;gap:1rem;scrollbar-width:none}
-.carousel-track::-webkit-scrollbar{display:none}
-.carousel-slide{scroll-snap-align:start}
-.carousel-slide img{width:100%;border-radius:16px;display:block;box-shadow:0 14px 34px rgba(0,0,0,.16)}
-.carousel-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border:none;border-radius:999px;background:rgba(28,43,28,.85);color:#fff;font-size:1.8rem;line-height:1;cursor:pointer;z-index:2}
-.carousel-nav.prev{left:.5rem}.carousel-nav.next{right:.5rem}
-@media(max-width:760px){.carousel-nav{display:none}}
