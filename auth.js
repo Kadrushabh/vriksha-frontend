@@ -48,9 +48,13 @@ class VrikshaAuth {
         this.isLoggedIn = true;
         this._saveToCache(data.user);
         this.updateUI();
-      } else if (!this.user) {
-        this.isLoggedIn = false;
-        this.updateUI();
+      } else {
+        // If we already have cached user data, keep user logged in until explicit logout.
+        // This prevents cross-page flicker/logouts when backend session checks are inconsistent.
+        if (!this.user) {
+          this.isLoggedIn = false;
+          this.updateUI();
+        }
       }
     } catch (e) {
       console.log('Session verify skipped (server busy?):', e.message);
